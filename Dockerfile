@@ -1,4 +1,7 @@
-FROM ubuntu:21.10
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV TZ Asia/Jakarta
 
 RUN set -ex \
     && export DEBIAN_FRONTEND=noninteractive \
@@ -17,7 +20,6 @@ RUN set -ex \
     && apt-get -qq -y clean \
     && rm -rf -- /var/lib/apt/lists/* /var/cache/apt/archives/* /etc/apt/sources.list.d/*
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
+ENV && LANG en_US.UTF-8 \
+    && LANGUAGE en_US:en \
+    && LC_ALL en_US.UTF-8
