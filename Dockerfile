@@ -1,25 +1,23 @@
 FROM ubuntu:22.04
 
-ENV DEBIAN_FRONTEND="noninteractive"
 ENV TZ Asia/Jakarta
+WORKDIR /usr/src/app
+SHELL ["/bin/bash", "-c"]
+RUN chmod 777 /usr/src/app
 
-RUN set -ex \
-    && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -qq update \
-    && apt-get -qq -y dist-upgrade \
-    && apt-get -qq -y install --no-install-recommends \
-        locales python3 python3-lxml python3-pip \
-        libc-ares-dev libcrypto++-dev libcurl4-openssl-dev \
-        libmagic-dev libsodium-dev libsqlite3-dev libssl-dev \
-        aria2 curl wget ffmpeg jq git p7zip-full p7zip-rar pv mediainfo neofetch \
-    && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
-    && locale-gen \
-    && curl -fsSL https://github.com/jaskaranSM/megasdkrest/releases/download/v0.1/megasdkrest -o /usr/local/bin/megasdkrest \
-    && chmod +x /usr/local/bin/megasdkrest \
-    && apt-get -qq -y autoremove --purge \
-    && apt-get -qq -y clean \
-    && rm -rf -- /var/lib/apt/lists/* /var/cache/apt/archives/* /etc/apt/sources.list.d/*
+RUN apt-get -y update && DEBIAN_FRONTEND="noninteractive" \
+    apt-get install -y python3 python3-pip aria2 qbittorrent-nox \
+    tzdata p7zip-full p7zip-rar xz-utils curl wget pv jq ffmpeg \
+    locales git unzip rtmpdump libmagic-dev libcurl4-openssl-dev \
+    libssl-dev libc-ares-dev libsodium-dev libcrypto++-dev \
+    libsqlite3-dev libfreeimage-dev libpq-dev libffi-dev neofetch mediainfo \
+    && locale-gen en_US.UTF-8 && \
+    curl -L https://github.com/ViswanathBalusu/megasdkrest/releases/download/latest/megasdkrest-$(cpu=$(uname -m);\
+    if [[ "$cpu" == "x86_64" ]]; then echo "amd64"; elif [[ "$cpu" == "x86" ]]; \
+    then echo "i386"; elif [[ "$cpu" == "aarch64" ]]; then echo "arm64"; else echo $cpu; fi) \
+    -o /usr/local/bin/megasdkrest && chmod +x /usr/local/bin/megasdkrest
 
-ENV && LANG en_US.UTF-8 \
-    && LANGUAGE en_US:en \
-    && LC_ALL en_US.UTF-8
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US:en"
+
+RUN wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht.dat -O /usr/src/app/dht.dat \
+    && wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht6.dat -O /usr/src/app/dht6.dat
