@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 LABEL org.opencontainers.image.source="https://github.com/BreakdownsHub/megarest-python"
 LABEL org.opencontainers.image.description="MegaRest Docker"
 
+ARG TARGETPLATFORM BUILDPLATFORM
 ENV TZ Asia/Jakarta
 WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
